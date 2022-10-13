@@ -1,52 +1,95 @@
-class Usuario {
+const fs = require("fs");
 
-    constructor (nombre, apellido, libros, mascotas) {
-        this.nombre = nombre
-        this.apellido = apellido
-        this.libros = libros || []
-        this.mascotas = mascotas || []
-    }
+class Contenedor {
+  constructor(archivo) {
+    this.archivo = archivo || "archivo.txt";
+  }
 
-    getFullName() {
-        let fullName = `${this.nombre} ${this.apellido}`
-        console.log(fullName)
-        return fullName
+  async save(objeto) {
+    try {
+      const contenido = await fs.promises.readFile(this.archivo, "utf-8");
+      console.log(contenido);
+      let data = JSON.parse(contenido);
+      objeto.id = data.length + 1;
+      data.push(objeto);
+      await fs.promises.writeFile(this.archivo, JSON.stringify(data));
+      return data;
+    } catch (error) {
+      let contenido = [];
+      objeto.id = contenido.length + 1;
+      contenido.push(objeto);
+      await fs.promises.writeFile(this.archivo, JSON.stringify(contenido));
+      return contenido;
     }
+  }
 
-    addMascota(nombreMascota) {
-        console.log(`Cargando mascota: ${nombreMascota}`)
-        this.mascotas.push(nombreMascota)
-    }
+  async getById(numero) {
+    const contenido = await fs.promises.readFile(this.archivo, "utf-8");
+    let busqueda = JSON.parse(contenido).find(
+      (element) => element.id === numero
+    );
+    return busqueda;
+  }
 
-    countMascotas() {
-        let countMascotas = this.mascotas.length
-        console.log(`cantidad mascotas: ${countMascotas}`)
-        return countMascotas
-    }
+  async getAll() {
+    const contenido = await fs.promises.readFile(this.archivo, "utf-8");
+    return JSON.stringify(contenido);
+  }
 
-    addBook(nombreLibro, autor) {
-        let data = {nombre: nombreLibro,autor: autor}
-        console.log(`Cargando libro: ${nombreLibro}, ${autor}`)
-        this.libros.push(data)
+  async deleteById(numero) {
+    const contenido = await fs.promises.readFile(this.archivo, "utf-8");
+    try {
+      let data = JSON.parse(contenido).filter(function (element) {
+        return element.id != numero;
+      });
+      await fs.promises.writeFile(this.archivo, JSON.stringify(data));
+      console.log(`Guardando ${this.file}`);
+    } catch (error) {
+      console.log(`Error al guardar ${this.file}`);
     }
+  }
 
-    getBookNames() {
-        let arrayNombres = []
-        this.libros.forEach(element => {
-            console.log(`se encontro: ${element.nombre}`)
-            arrayNombres.push(element.nombre)
-        });
-        console.log(arrayNombres)
-        return arrayNombres
-    }
+  async deleteAll() {
+    await fs.promises.unlink(this.archivo, (error) => {
+      if (error) {
+        console.log(`Error al eliminar: ${this.file}`);
+      } else {
+        console.log(`Eliminando ${this.file}`);
+      }
+    });
+  }
 }
 
-let usuario = new Usuario("Elon","Musk")
+let prueba = new Contenedor("prueba.txt");
+let objeto = { pepe: "prueba", contenido: 2 };
 
-usuario.getFullName()
-usuario.addMascota("pepito")
-usuario.addMascota("pepita")
-usuario.countMascotas()
-usuario.addBook("El señor de las moscas","William Goldwing")
-usuario.addBook("Fundación","Isaac Asimov")
-usuario.getBookNames()
+prueba.save(objeto).then((ret) => {
+  console.log(ret);
+});
+
+prueba.save(objeto).then((ret) => {
+  console.log(ret);
+});
+
+prueba.save(objeto).then((ret) => {
+  console.log(ret);
+});
+
+/*prueba.save(objeto).then(ret => {
+    if (ret === true) {
+        console.log('Registro dado de alta')
+    } else {
+        console.log('Error al dar de alta el registro')
+    }
+})
+
+prueba.getById(5).then(ret => {
+    if (ret === null || ret === undefined) {
+        console.log('Registro no encontrado')
+    } else {
+        console.log(ret)
+    }
+})
+
+/*prueba.deleteById(5).then()
+prueba.deleteAll().then()*/
