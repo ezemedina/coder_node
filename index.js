@@ -8,88 +8,101 @@ class Contenedor {
   async save(objeto) {
     try {
       const contenido = await fs.promises.readFile(this.archivo, "utf-8");
-      console.log(contenido);
       let data = JSON.parse(contenido);
       objeto.id = data.length + 1;
       data.push(objeto);
       await fs.promises.writeFile(this.archivo, JSON.stringify(data));
+      console.log(`Se guardo el objeto: ${objeto.id}`)
       return data;
     } catch (error) {
-      let contenido = [];
-      objeto.id = contenido.length + 1;
-      contenido.push(objeto);
-      await fs.promises.writeFile(this.archivo, JSON.stringify(contenido));
-      return contenido;
+      let data = [];
+      objeto.id = data.length + 1;
+      data.push(objeto);
+      await fs.promises.writeFile(this.archivo, JSON.stringify(data));
+      console.log(`Se guardo el objeto: ${objeto.id}`)
+      return data;
     }
   }
 
   async getById(numero) {
-    const contenido = await fs.promises.readFile(this.archivo, "utf-8");
-    let busqueda = JSON.parse(contenido).find(
-      (element) => element.id === numero
-    );
-    return busqueda;
+    try {
+      const contenido = await fs.promises.readFile(this.archivo, "utf-8");
+      JSON.parse(contenido).forEach(element => {
+        if ( element.id == numero ) {
+          console.log(`Se encontro el objeto ${JSON.stringify(element)}`);
+          return element
+        }
+      });
+    } catch {
+      console.log("Error al obtener ID");
+      return null;
+    }
   }
 
   async getAll() {
-    const contenido = await fs.promises.readFile(this.archivo, "utf-8");
-    return JSON.stringify(contenido);
+    try {
+      const contenido = await fs.promises.readFile(this.archivo, "utf-8");
+      console.log(`Contenido: ${JSON.stringify(contenido)}`)
+      return JSON.stringify(contenido);
+    } catch {
+      console.log("Error al abrir el archivo");
+      return null;
+    }
   }
 
   async deleteById(numero) {
-    const contenido = await fs.promises.readFile(this.archivo, "utf-8");
     try {
+      const contenido = await fs.promises.readFile(this.archivo, "utf-8");
       let data = JSON.parse(contenido).filter(function (element) {
         return element.id != numero;
       });
       await fs.promises.writeFile(this.archivo, JSON.stringify(data));
-      console.log(`Guardando ${this.file}`);
+      console.log(`Guardando ${this.archivo}`);
+      return true;
     } catch (error) {
-      console.log(`Error al guardar ${this.file}`);
+      console.log(`Error al guardar ${this.archivo}`);
+      return false;
     }
   }
 
   async deleteAll() {
-    await fs.promises.unlink(this.archivo, (error) => {
-      if (error) {
-        console.log(`Error al eliminar: ${this.file}`);
-      } else {
-        console.log(`Eliminando ${this.file}`);
-      }
-    });
+    try {
+      await fs.promises.unlink(this.archivo);
+      console.log(`Archivo eliminado`);
+      return true;
+    } catch {
+      console.log(`Error al eliminar archivo`);
+      return false;
+    }
   }
 }
 
 let prueba = new Contenedor("prueba.txt");
-let objeto = { pepe: "prueba", contenido: 2 };
+const objeto = { pepe: "prueba", contenido: 2 };
 
-prueba.save(objeto).then((ret) => {
-  console.log(ret);
+prueba.save(objeto).then(() => {
+  prueba.save(objeto).then(() => {
+    prueba.save(objeto).then(() => {
+      prueba.save(objeto).then(() => {
+        prueba.save(objeto).then(() => {
+          prueba.save(objeto).then(() => {
+            prueba.save(objeto).then(() => {
+              prueba.save(objeto).then(() => {
+                prueba.getAll().then(()=> {
+                  prueba.getById(5).then(() => {
+                    prueba.deleteById(5).then(() => {
+                      prueba.deleteAll().then(() => {
+
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
 });
 
-prueba.save(objeto).then((ret) => {
-  console.log(ret);
-});
-
-prueba.save(objeto).then((ret) => {
-  console.log(ret);
-});
-
-/*prueba.save(objeto).then(ret => {
-    if (ret === true) {
-        console.log('Registro dado de alta')
-    } else {
-        console.log('Error al dar de alta el registro')
-    }
-})
-
-prueba.getById(5).then(ret => {
-    if (ret === null || ret === undefined) {
-        console.log('Registro no encontrado')
-    } else {
-        console.log(ret)
-    }
-})
-
-/*prueba.deleteById(5).then()
-prueba.deleteAll().then()*/
