@@ -1,52 +1,108 @@
-class Usuario {
+const fs = require("fs");
 
-    constructor (nombre, apellido, libros, mascotas) {
-        this.nombre = nombre
-        this.apellido = apellido
-        this.libros = libros || []
-        this.mascotas = mascotas || []
-    }
+class Contenedor {
+  constructor(archivo) {
+    this.archivo = archivo || "archivo.txt";
+  }
 
-    getFullName() {
-        let fullName = `${this.nombre} ${this.apellido}`
-        console.log(fullName)
-        return fullName
+  async save(objeto) {
+    try {
+      const contenido = await fs.promises.readFile(this.archivo, "utf-8");
+      let data = JSON.parse(contenido);
+      objeto.id = data.length + 1;
+      data.push(objeto);
+      await fs.promises.writeFile(this.archivo, JSON.stringify(data));
+      console.log(`Se guardo el objeto: ${objeto.id}`)
+      return data;
+    } catch (error) {
+      let data = [];
+      objeto.id = data.length + 1;
+      data.push(objeto);
+      await fs.promises.writeFile(this.archivo, JSON.stringify(data));
+      console.log(`Se guardo el objeto: ${objeto.id}`)
+      return data;
     }
+  }
 
-    addMascota(nombreMascota) {
-        console.log(`Cargando mascota: ${nombreMascota}`)
-        this.mascotas.push(nombreMascota)
+  async getById(numero) {
+    try {
+      const contenido = await fs.promises.readFile(this.archivo, "utf-8");
+      JSON.parse(contenido).forEach(element => {
+        if ( element.id == numero ) {
+          console.log(`Se encontro el objeto ${JSON.stringify(element)}`);
+          return element
+        }
+      });
+    } catch {
+      console.log("Error al obtener ID");
+      return null;
     }
+  }
 
-    countMascotas() {
-        let countMascotas = this.mascotas.length
-        console.log(`cantidad mascotas: ${countMascotas}`)
-        return countMascotas
+  async getAll() {
+    try {
+      const contenido = await fs.promises.readFile(this.archivo, "utf-8");
+      console.log(`Contenido: ${JSON.stringify(contenido)}`)
+      return JSON.stringify(contenido);
+    } catch {
+      console.log("Error al abrir el archivo");
+      return null;
     }
+  }
 
-    addBook(nombreLibro, autor) {
-        let data = {nombre: nombreLibro,autor: autor}
-        console.log(`Cargando libro: ${nombreLibro}, ${autor}`)
-        this.libros.push(data)
+  async deleteById(numero) {
+    try {
+      const contenido = await fs.promises.readFile(this.archivo, "utf-8");
+      let data = JSON.parse(contenido).filter(function (element) {
+        return element.id != numero;
+      });
+      await fs.promises.writeFile(this.archivo, JSON.stringify(data));
+      console.log(`Guardando ${this.archivo}`);
+      return true;
+    } catch (error) {
+      console.log(`Error al guardar ${this.archivo}`);
+      return false;
     }
+  }
 
-    getBookNames() {
-        let arrayNombres = []
-        this.libros.forEach(element => {
-            console.log(`se encontro: ${element.nombre}`)
-            arrayNombres.push(element.nombre)
-        });
-        console.log(arrayNombres)
-        return arrayNombres
+  async deleteAll() {
+    try {
+      await fs.promises.unlink(this.archivo);
+      console.log(`Archivo eliminado`);
+      return true;
+    } catch {
+      console.log(`Error al eliminar archivo`);
+      return false;
     }
+  }
 }
 
-let usuario = new Usuario("Elon","Musk")
+let prueba = new Contenedor("prueba.txt");
+const objeto = { pepe: "prueba", contenido: 2 };
 
-usuario.getFullName()
-usuario.addMascota("pepito")
-usuario.addMascota("pepita")
-usuario.countMascotas()
-usuario.addBook("El señor de las moscas","William Goldwing")
-usuario.addBook("Fundación","Isaac Asimov")
-usuario.getBookNames()
+prueba.save(objeto).then(() => {
+  prueba.save(objeto).then(() => {
+    prueba.save(objeto).then(() => {
+      prueba.save(objeto).then(() => {
+        prueba.save(objeto).then(() => {
+          prueba.save(objeto).then(() => {
+            prueba.save(objeto).then(() => {
+              prueba.save(objeto).then(() => {
+                prueba.getAll().then(()=> {
+                  prueba.getById(5).then(() => {
+                    prueba.deleteById(5).then(() => {
+                      prueba.deleteAll().then(() => {
+
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+});
+
