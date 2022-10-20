@@ -1,108 +1,37 @@
-const fs = require("fs");
+const { v4: uuidv4 } = require('uuid')
+const express = require('express')
+const fs = require('fs')
+const PORT = 8080
+const app = express()
+const archivo = "producto.txt"
+let informacion = []
 
-class Contenedor {
-  constructor(archivo) {
-    this.archivo = archivo || "archivo.txt";
-  }
-
-  async save(objeto) {
-    try {
-      const contenido = await fs.promises.readFile(this.archivo, "utf-8");
-      let data = JSON.parse(contenido);
-      objeto.id = data.length + 1;
-      data.push(objeto);
-      await fs.promises.writeFile(this.archivo, JSON.stringify(data));
-      console.log(`Se guardo el objeto: ${objeto.id}`)
-      return data;
-    } catch (error) {
-      let data = [];
-      objeto.id = data.length + 1;
-      data.push(objeto);
-      await fs.promises.writeFile(this.archivo, JSON.stringify(data));
-      console.log(`Se guardo el objeto: ${objeto.id}`)
-      return data;
-    }
-  }
-
-  async getById(numero) {
-    try {
-      const contenido = await fs.promises.readFile(this.archivo, "utf-8");
-      JSON.parse(contenido).forEach(element => {
-        if ( element.id == numero ) {
-          console.log(`Se encontro el objeto ${JSON.stringify(element)}`);
-          return element
-        }
-      });
-    } catch {
-      console.log("Error al obtener ID");
-      return null;
-    }
-  }
-
-  async getAll() {
-    try {
-      const contenido = await fs.promises.readFile(this.archivo, "utf-8");
-      console.log(`Contenido: ${JSON.stringify(contenido)}`)
-      return JSON.stringify(contenido);
-    } catch {
-      console.log("Error al abrir el archivo");
-      return null;
-    }
-  }
-
-  async deleteById(numero) {
-    try {
-      const contenido = await fs.promises.readFile(this.archivo, "utf-8");
-      let data = JSON.parse(contenido).filter(function (element) {
-        return element.id != numero;
-      });
-      await fs.promises.writeFile(this.archivo, JSON.stringify(data));
-      console.log(`Guardando ${this.archivo}`);
-      return true;
-    } catch (error) {
-      console.log(`Error al guardar ${this.archivo}`);
-      return false;
-    }
-  }
-
-  async deleteAll() {
-    try {
-      await fs.promises.unlink(this.archivo);
-      console.log(`Archivo eliminado`);
-      return true;
-    } catch {
-      console.log(`Error al eliminar archivo`);
-      return false;
-    }
-  }
+try {
+  console.log(`Intentando leer el archivo: ${archivo}`)
+  informacion = JSON.parse(fs.readFileSync(archivo, 'utf-8'))
+} catch (error) {
+  console.error(error)
 }
 
-let prueba = new Contenedor("prueba.txt");
-const objeto = { pepe: "prueba", contenido: 2 };
+const server = app.listen(PORT, () => {
+  console.log(`Listening server ${server.address().port}`)
+})
 
-prueba.save(objeto).then(() => {
-  prueba.save(objeto).then(() => {
-    prueba.save(objeto).then(() => {
-      prueba.save(objeto).then(() => {
-        prueba.save(objeto).then(() => {
-          prueba.save(objeto).then(() => {
-            prueba.save(objeto).then(() => {
-              prueba.save(objeto).then(() => {
-                prueba.getAll().then(()=> {
-                  prueba.getById(5).then(() => {
-                    prueba.deleteById(5).then(() => {
-                      prueba.deleteAll().then(() => {
+app.get('/productos', (req,res) => {
+  let uuid = uuidv4()
+  let body = JSON.stringify(informacion)
+  res.set('X-UUID', uuid)
+  res.status(200)
+  res.send(body)
+  console.log(`Id: ${uuid}, Path: ${req.path}, Response: ${body}`)
+})
 
-                      });
-                    });
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
-    });
-  });
-});
-
+app.get('/productosRandom', (req,res) => {
+  let randomIndex = Math.floor(Math.random() * informacion.length ); 
+  let uuid = uuidv4()
+  let body = `[${JSON.stringify(informacion[randomIndex])}]`
+  res.set('X-UUID', uuid)
+  res.status(200)
+  res.send(body)
+  console.log(`Id: ${uuid}, Path: ${req.path}, Index: ${randomIndex}, Response: ${body}`)
+})
