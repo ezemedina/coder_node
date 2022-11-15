@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tienda Coder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <nav class="navbar bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="https://cdn2.iconfinder.com/data/icons/basic-flat-icon-set/128/store-512.png" alt="Logo"
+                    width="30" height="30" class="d-inline-block align-text-top" />
+            </a>
+        </div>
+    </nav>
+    <div class="container d-flex justify-content-center text-center">
+        <div class="col-6 ">
+            <form id="formSubirProducto">
+                <h1 class="my-3">Ingresar producto</h1>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Producto</span>
+                    <input type="text" class="form-control" placeholder="Nombre del producto"
+                        aria-label="Nombre del producto" aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Precio</span>
+                    <input type="number" class="form-control" placeholder="Precio del producto"
+                        aria-label="Precio del producto" aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Imagen Ilustrativa</span>
+                    <input type="text" class="form-control" placeholder="Imagen del producto"
+                        aria-label="Imagen del producto" aria-describedby="basic-addon1">
+                </div>
+                <button id="botonEnviar" type="submit" class="btn btn-primary">Enviar</button>
+                <button id="botonEnviando" class="btn btn-primary visually-hidden" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Enviando...
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <i class="bi bi-exclamation-triangle-fill mx-1 link-warning"></i>
+                <strong class="me-auto">Error General</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Se ah producido un error al realizar la solicitud
+            </div>
+        </div>
+    </div>
+    <div id="informacion" class="container"></div>
+    <script type="text/javascript">
+        const api = 'http://localhost:8080/api/productos';
+
+        function tiggerToast() {
+            let toastElList = [].slice.call(document.querySelectorAll('.toast'))
+            let toastList = toastElList.map(function (toastEl) {
+                return new bootstrap.Toast(toastEl)
+            })
+            toastList.forEach(toast => toast.show())
+        }
+
+        let formSubirProducto = document.getElementById("formSubirProducto");
+        let botonEnviar = document.getElementById("botonEnviar");
+        let botonEnviando = document.getElementById("botonEnviando");
+
+        formSubirProducto.addEventListener("submit", (e) => {
+            e.preventDefault();
+            let producto = e.target.children[1].children[1].value
+            let precio = e.target.children[2].children[1].value
+            let imagen = e.target.children[3].children[1].value
+
+            botonEnviar.classList.add('visually-hidden')
+            botonEnviando.classList.remove('visually-hidden')
+
+            let data = {
+                title: producto,
+                price: precio,
+                thumbnail: imagen
+            };
+
+            fetch(api, {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(res => res.json())
+                .catch(function (error) {
+                    botonEnviando.classList.add('visually-hidden')
+                    botonEnviar.classList.remove('visually-hidden')
+                    tiggerToast()
+                })
+                .then(function (response) {
+                    botonEnviando.classList.add('visually-hidden')
+                    botonEnviar.classList.remove('visually-hidden')
+                    let informacion = document.getElementById("informacion");
+                    informacion.innerHTML = `
+                    <p class="h4 my-3">Producto ingresado</p>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Precio</th>
+                            <th scope="col">Imagen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                            <th scope="row">${response.id}</th>
+                            <td>${response.title}</td>
+                            <td>${response.price}</td>
+                            <td><img src="${response.thumbnail}" alt="thumbnail" width="30" height="30"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    `;
+                });
+        });
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"
+        integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
