@@ -31,6 +31,6 @@ app.get('/productos', function (req, res) {
   });
 });
 
-const server = app.listen( config.port , () => {
+const server = app.listen(config.port, () => {
   console.log(`${moment().format()} Listening server ${server.address().address} : ${server.address().port}`)
 })
