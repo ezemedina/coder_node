@@ -1,0 +1,27 @@
+<div class="container d-flex justify-content-center text-center">
+    <div class="col-6 ">
+        <form id="formSubirProducto" method="post" action="/api/productos">
+            <h1 class="my-3">Ingresar producto</h1>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Producto</span>
+                <input type="text" class="form-control" placeholder="Nombre del producto"
+                    aria-label="Nombre del producto" aria-describedby="basic-addon1">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Precio</span>
+                <input type="number" class="form-control" placeholder="Precio del producto"
+                    aria-label="Precio del producto" aria-describedby="basic-addon1">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1">Imagen Ilustrativa</span>
+                <input type="text" class="form-control" placeholder="Imagen del producto"
+                    aria-label="Imagen del producto" aria-describedby="basic-addon1">
+            </div>
+            <button id="botonEnviar" type="submit" class="btn btn-primary">Enviar</button>
+            <button id="botonEnviando" class="btn btn-primary visually-hidden" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Enviando...
+            </button>
+        </form>
+    </div>
+</div>
