@@ -8,12 +8,12 @@
 
     formSubirProducto.addEventListener("submit", (e) => {
         e.preventDefault();
-        let producto = e.target.children[1].children[1].value
-        let precio = e.target.children[2].children[1].value
-        let imagen = e.target.children[3].children[1].value
+        let producto = e.target.children[1].children[1].value;
+        let precio = e.target.children[2].children[1].value;
+        let imagen = e.target.children[3].children[1].value;
 
-        botonEnviar.classList.add('visually-hidden')
-        botonEnviando.classList.remove('visually-hidden')
+        botonEnviar.classList.add('visually-hidden');
+        botonEnviando.classList.remove('visually-hidden');
 
         let data = {
             title: producto,
@@ -30,12 +30,12 @@
         })
             .then(res => res.json())
             .catch(function (error) {
-                botonEnviando.classList.add('visually-hidden')
-                botonEnviar.classList.remove('visually-hidden')
+                botonEnviando.classList.add('visually-hidden');
+                botonEnviar.classList.remove('visually-hidden');
             })
             .then(function (response) {
-                botonEnviando.classList.add('visually-hidden')
-                botonEnviar.classList.remove('visually-hidden')
+                botonEnviando.classList.add('visually-hidden');
+                botonEnviar.classList.remove('visually-hidden');
             });
     });
 
