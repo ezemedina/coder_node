@@ -7,6 +7,7 @@ const app = express()
 const router = Router()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
+app.set('view engine', 'ejs');
 let informacion = []
 let idProducto = 1
 
@@ -41,7 +42,7 @@ router.get('/', (req,res) => {
 
 router.post('/', (req,res) => {
   let uuid = uuidv4()
-  console.log(`${moment().format()} INFO Id: ${uuid}, Path: /api/productos${req.path}, Method: ${req.method}`)
+  console.log(`${moment().format()} INFO Id: ${uuid}, Path: /api/productos${req.path}, Method: ${req.method}, Payload: ${JSON.stringify(req.body)}`)
   res.set('X-UUID', uuid)
   let request = req.body
   if ( request.title != undefined && request.price != undefined && request.thumbnail != undefined ) {
@@ -52,13 +53,13 @@ router.post('/', (req,res) => {
       res.send(response)
       console.log(`${moment().format()} INFO Id: ${uuid}, Response: ${JSON.stringify(response)}`)
     } catch (error) {
-      let response = {"Error": "No se pudo procesar la solicitud"}
+      let response = {"Message": "No se pudo procesar la solicitud"}
       res.status(503)
       res.send(response)
       console.log(`${moment().format()} ERROR Id: ${uuid}, Response: ${response}`)
     }
   } else {
-    let response = {"Error": "Solicitud malformada"}
+    let response = {"Message": "Solicitud malformada"}
     res.status(400)
     res.send(response)
     console.log(`${moment().format()} ERROR Id: ${uuid}, Response: ${JSON.stringify(response)}`)
@@ -73,7 +74,7 @@ router.get('/:id', (req,res) => {
     let id = parseInt(req.params.id)
     let response = informacion.find(element => element.id === id)
     if ( response === undefined ) {
-      throw {"Error": "producto no encontrado"}
+      throw {"Message": `Producto no encontrado con el ID:${id}`}
     }
     res.status(200)
     res.send(response)
@@ -87,13 +88,13 @@ router.get('/:id', (req,res) => {
 
 router.put('/:id', (req,res) => {
   let uuid = uuidv4()
-  console.log(`${moment().format()} INFO Id: ${uuid}, Path: /api/productos${req.path}, Method: ${req.method}`)
+  console.log(`${moment().format()} INFO Id: ${uuid}, Path: /api/productos${req.path}, Method: ${req.method}, Payload: ${JSON.stringify(req.body)}`)
   res.set('X-UUID', uuid)
   try {
     let id = parseInt(req.params.id)
     let index = informacion.findIndex(element => element.id === id)
     if ( informacion[index] === undefined ) {
-      throw {"Error": "producto no encontrado"}
+      throw {"Message": `Producto no encontrado con el ID:${id}`}
     }
     let request = req.body
     if ( request.title != undefined ){
@@ -122,10 +123,10 @@ router.delete('/:id', (req,res) => {
     let id = parseInt(req.params.id)
     let index = informacion.findIndex(element => element.id === id)
     if ( informacion[index] === undefined ) {
-      throw {"Error": "producto no encontrado"}
+      throw {"Message": "Producto no encontrado"}
     }
     informacion.splice(index, 1)
-    let body = {"OK": "Producto eliminado"}
+    let body = {"Message": "Producto eliminado"}
     res.status(200)
     res.send(body)
     console.log(`${moment().format()} INFO Id: ${uuid}, Response: ${JSON.stringify(body)}`)
@@ -137,7 +138,24 @@ router.delete('/:id', (req,res) => {
 })
 
 app.use('/api/productos', router)
-app.get('/', express.static(__dirname + '/public'))
+
+app.get('/', function(req, res) {
+  let uuid = uuidv4()
+  console.log(`${moment().format()} INFO Id: ${uuid}, Path: ${req.path}, Method: ${req.method}`)
+  res.set('X-UUID', uuid)
+  res.status(200)
+  res.render('pages/index');
+});
+
+app.get('/productos', function(req, res) {
+  let uuid = uuidv4()
+  console.log(`${moment().format()} INFO Id: ${uuid}, Path: ${req.path}, Method: ${req.method}`)
+  res.set('X-UUID', uuid)
+  res.status(200)
+  res.render('pages/productos',{
+    productos: informacion
+  });
+});
 
 const server = app.listen(PORT, () => {
   console.log(`${moment().format()} Listening server ${server.address().port}`)
