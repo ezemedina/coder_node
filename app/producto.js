@@ -65,7 +65,7 @@ router.routerProductos.post("/", (req, res) => {
                 `${moment().format()} INFO Id: ${uuid}, Response: ${JSON.stringify(
                     response
                 )}`
-            ); 
+            );
         } catch (error) {
             let response = { Message: "No se pudo procesar la solicitud" };
             res.status(503);
@@ -190,4 +190,4 @@ router.routerProductos.delete("/:id", (req, res) => {
     }
 });
 
-module.exports = { informacion , Producto };
+module.exports = { informacion, Producto };

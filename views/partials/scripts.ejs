@@ -99,7 +99,7 @@
         try {
             socket.emit("nuevoMensaje", JSON.stringify(data));
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
 
         botonEnviandoChat.classList.add('visually-hidden');
