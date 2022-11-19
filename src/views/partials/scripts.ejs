@@ -37,6 +37,9 @@
             try {
                 console.info(`Emitiendo mensaje al canal nuevoProducto ${JSON.stringify(data)}`);
                 socket.emit("nuevoProducto", JSON.stringify(data));
+                e.target.children[1].children[1].value = "";
+                e.target.children[2].children[1].value = "";
+                e.target.children[3].children[1].value = "";
             } catch (error) {
                 console.error(error);
             }
@@ -107,6 +110,7 @@
             try {
                 console.info(`Emitiendo mensaje al canal nuevoMensaje ${JSON.stringify(data)}`);
                 socket.emit("nuevoMensaje", JSON.stringify(data));
+                e.target.children[1].children[0].value = "";
             } catch (error) {
                 console.log(error);
             }
