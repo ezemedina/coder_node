@@ -35,9 +35,10 @@
             };
 
             try {
+                console.info(`Emitiendo mensaje al canal nuevoProducto ${JSON.stringify(data)}`);
                 socket.emit("nuevoProducto", JSON.stringify(data));
             } catch (error) {
-                console.log(error)
+                console.error(error);
             }
 
             botonEnviando.classList.add('visually-hidden');
@@ -57,6 +58,7 @@
                 alerta.classList.remove('visually-hidden');
                 tabla.classList.add('visually-hidden');
                 informacion.innerHTML = "";
+                console.info(`Sin productos`);
             } else {
                 alerta.classList.add('visually-hidden');
                 tabla.classList.remove('visually-hidden');
@@ -77,6 +79,7 @@
                 </tr>`;
                 informacion.innerHTML += append;
                 });
+                console.info(`Recepcion de productos imprimidos`);
             }
         });
 
@@ -102,6 +105,7 @@
             };
 
             try {
+                console.info(`Emitiendo mensaje al canal nuevoMensaje ${JSON.stringify(data)}`);
                 socket.emit("nuevoMensaje", JSON.stringify(data));
             } catch (error) {
                 console.log(error);
@@ -119,6 +123,7 @@
             if (mensajesRecibidos.length === 0) {
                 alertaChat.classList.remove('visually-hidden');
                 mensajes.innerHTML = "";
+                console.info(`Sin mensajes`);
             } else {
                 alertaChat.classList.add('visually-hidden');
                 mensajes.innerHTML = "";
@@ -137,6 +142,7 @@
                     mensajes.innerHTML += append;
                 });
                 mensajes.scrollTop = mensajes.scrollHeight;
+                console.info(`Recepcion de mensajes imprimidos`);
             }
         });
     });
