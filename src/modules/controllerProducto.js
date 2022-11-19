@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
 const moment = require("moment");
-const router = require("./router.js");
+const routerProducto = require("../routes/apiProductos");
 
 let informacion = [];
 let idProducto = 1;
@@ -23,7 +23,7 @@ class Producto {
     }
 }
 
-router.routerProductos.get("/", (req, res) => {
+routerProducto.get("/", (req, res) => {
     let uuid = uuidv4();
     console.log(
         `${moment().format()} INFO Id: ${uuid}, Path: /api/productos${req.path
@@ -39,7 +39,7 @@ router.routerProductos.get("/", (req, res) => {
     );
 });
 
-router.routerProductos.post("/", (req, res) => {
+routerProducto.post("/", (req, res) => {
     let uuid = uuidv4();
     console.log(
         `${moment().format()} INFO Id: ${uuid}, Path: /api/productos${req.path
@@ -88,7 +88,7 @@ router.routerProductos.post("/", (req, res) => {
     }
 });
 
-router.routerProductos.get("/:id", (req, res) => {
+routerProducto.get("/:id", (req, res) => {
     let uuid = uuidv4();
     console.log(
         `${moment().format()} INFO Id: ${uuid}, Path: /api/productos${req.path
@@ -119,7 +119,7 @@ router.routerProductos.get("/:id", (req, res) => {
     }
 });
 
-router.routerProductos.put("/:id", (req, res) => {
+routerProducto.put("/:id", (req, res) => {
     let uuid = uuidv4();
     console.log(
         `${moment().format()} INFO Id: ${uuid}, Path: /api/productos${req.path
@@ -159,7 +159,7 @@ router.routerProductos.put("/:id", (req, res) => {
     }
 });
 
-router.routerProductos.delete("/:id", (req, res) => {
+routerProducto.delete("/:id", (req, res) => {
     let uuid = uuidv4();
     console.log(
         `${moment().format()} INFO Id: ${uuid}, Path: /api/productos${req.path
@@ -190,4 +190,4 @@ router.routerProductos.delete("/:id", (req, res) => {
     }
 });
 
-module.exports = informacion;
+module.exports = { informacion, Producto };
