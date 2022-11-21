@@ -1,27 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const moment = require("moment");
 const routerProducto = require("../routes/apiProductos");
-
-let informacion = [];
-let idProducto = 1;
-
-class Producto {
-    constructor(title, price, thumbnail) {
-        this.id = this.getID();
-        this.title = title;
-        this.price = price;
-        this.thumbnail = thumbnail;
-    }
-
-    getID() {
-        return idProducto++;
-    }
-
-    arrayPush() {
-        informacion.push(this);
-        return this;
-    }
-}
+const moduleProductos = require('../modules/moduleProductos');
 
 routerProducto.get("/", (req, res) => {
     let uuid = uuidv4();
@@ -30,7 +10,7 @@ routerProducto.get("/", (req, res) => {
         }, Method: ${req.method}`
     );
 
-    let body = informacion;
+    let body = moduleProductos.informacion;
     res.set("X-UUID", uuid);
     res.status(200);
     res.send(body);
@@ -53,7 +33,7 @@ routerProducto.post("/", (req, res) => {
         request.thumbnail != undefined
     ) {
         try {
-            let producto = new Producto(
+            let producto = new moduleProductos.Producto(
                 request.title,
                 request.price,
                 request.thumbnail
@@ -97,7 +77,7 @@ routerProducto.get("/:id", (req, res) => {
     res.set("X-UUID", uuid);
     try {
         let id = parseInt(req.params.id);
-        let response = informacion.find((element) => element.id === id);
+        let response = moduleProductos.informacion.find((element) => element.id === id);
         if (response === undefined) {
             throw { Message: `Producto no encontrado con el ID:${id}` };
         }
@@ -128,19 +108,19 @@ routerProducto.put("/:id", (req, res) => {
     res.set("X-UUID", uuid);
     try {
         let id = parseInt(req.params.id);
-        let index = informacion.findIndex((element) => element.id === id);
-        if (informacion[index] === undefined) {
+        let index = moduleProductos.informacion.findIndex((element) => element.id === id);
+        if (moduleProductos.informacion[index] === undefined) {
             throw { Message: `Producto no encontrado con el ID:${id}` };
         }
         let request = req.body;
         if (request.title != undefined) {
-            informacion[index].title = request.title;
+            moduleProductos.informacion[index].title = request.title;
         } else if (request.price != undefined) {
-            informacion[index].price = request.price;
+            moduleProductos.informacion[index].price = request.price;
         } else if (request.thumbanil != undefined) {
-            informacion[index].thumbanil = request.thumbanil;
+            moduleProductos.informacion[index].thumbanil = request.thumbanil;
         }
-        let response = informacion[index];
+        let response = moduleProductos.informacion[index];
         res.status(201);
         res.send(response);
         console.log(
@@ -168,11 +148,11 @@ routerProducto.delete("/:id", (req, res) => {
     res.set("X-UUID", uuid);
     try {
         let id = parseInt(req.params.id);
-        let index = informacion.findIndex((element) => element.id === id);
-        if (informacion[index] === undefined) {
+        let index = moduleProductos.informacion.findIndex((element) => element.id === id);
+        if (moduleProductos.informacion[index] === undefined) {
             throw { Message: "Producto no encontrado" };
         }
-        informacion.splice(index, 1);
+        moduleProductos.informacion.splice(index, 1);
         let body = { Message: "Producto eliminado" };
         res.status(200);
         res.send(body);
