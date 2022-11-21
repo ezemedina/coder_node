@@ -56,7 +56,7 @@ io.on("connection", (connection) => {
       data.price,
       data.thumbnail
     );
-    moduleProductos.informacion.push(producto);
+    producto.save();
     io.sockets.emit('productos', moduleProductos.informacion);
   });
 
