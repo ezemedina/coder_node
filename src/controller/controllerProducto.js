@@ -38,7 +38,7 @@ routerProducto.post("/", (req, res) => {
                 request.price,
                 request.thumbnail
             );
-            let response = producto.arrayPush();
+            let response = producto.save();
             res.status(201);
             res.send(response);
             console.log(

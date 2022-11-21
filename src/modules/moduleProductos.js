@@ -13,7 +13,7 @@ class Producto {
         return idProducto++;
     }
 
-    arrayPush() {
+    save() {
         informacion.push(this);
         return this;
     }
