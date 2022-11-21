@@ -4,7 +4,8 @@ const { Server: SocketServer } = require('socket.io');
 const { Server: HttpServer } = require('http');
 const moment = require("moment");
 const fs = require("fs");
-const productos = require('./modules/controllerProducto');
+const moduleProductos = require('./modules/moduleProductos');
+const moduleMensajes = require('./modules/moduleMesajes');
 const routerProducto = require('./routes/apiProductos');
 const config = require('./config');
 
@@ -33,7 +34,7 @@ app.get('/productos', function (req, res) {
   res.set('X-UUID', uuid);
   res.status(200);
   res.render('pages/productos', {
-    productos: productos.informacion
+    productos: moduleProductos.informacion
   });
 });
 
@@ -41,48 +42,33 @@ const connectedServer = httpServer.listen(config.port, () => {
   console.log(`${moment().format()} INFO Servidor escuchando puerto ${connectedServer.address().port}`);
 });
 
-let mensajes = [];
-
-try {
-  mensajes = JSON.parse(fs.readFileSync(`${config.carpetaMensajes}/${config.archivosMensajes}`, "utf-8"));
-  console.log(`${moment().format()} INFO Historial de chat encontrado`);
-} catch (error) {
-  console.log(`${moment().format()} ERROR Historial de chat no encontrado`);
-  fs.mkdir(`${config.carpetaMensajes}`, { recursive: true }, (err) => {
-    if (err) {
-      console.log(`${moment().format()} ERROR no se puede crear la carpeta ${config.carpetaMensajes}`);
-    } else {
-      console.log(`${moment().format()} INFO directorio ${config.carpetaMensajes} creado`);
-    }
-  });
-  mensajes = [];
-}
-
 io.on("connection", (connection) => {
   console.log(`${moment().format()} INFO Socket ID: ${connection.id} conectado`);
 
-  connection.emit('productos', productos.informacion);
-  connection.emit('mensajes', JSON.stringify(mensajes));
+  connection.emit('productos', moduleProductos.informacion);
+  connection.emit('mensajes', JSON.stringify(moduleMensajes.historialMensajes));
 
   connection.on('nuevoProducto', (elemento) => {
     let data = JSON.parse(elemento)
     console.log(`${moment().format()} INFO Channel: nuevoProducto Payload: ${elemento} Socket ID: ${connection.id}`);
-    let producto = new productos.Producto(
+    let producto = new moduleProductos.Producto(
       data.title,
       data.price,
       data.thumbnail
     );
-    productos.informacion.push(producto);
-    io.sockets.emit('productos', productos.informacion);
+    moduleProductos.informacion.push(producto);
+    io.sockets.emit('productos', moduleProductos.informacion);
   });
 
   connection.on('nuevoMensaje', (elemento) => {
     console.log(`${moment().format()} INFO Channel: nuevoMensaje Payload: ${elemento} Socket ID: ${connection.id}`);
     let data = JSON.parse(elemento);
-    data.timestamp = moment().format('DD/MM/YYYY HH:mm:ss');
-    mensajes.push(data);
-    fs.writeFileSync(`${config.carpetaMensajes}/${config.archivosMensajes}`, JSON.stringify(mensajes));
-    io.sockets.emit('mensajes', JSON.stringify(mensajes));
+    let mensaje = new moduleMensajes.Mensaje(
+      data.author,
+      data.message
+    );
+    mensaje.save();
+    io.sockets.emit('mensajes', JSON.stringify(moduleMensajes.historialMensajes));
   });
 
 });
