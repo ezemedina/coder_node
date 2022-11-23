@@ -1,5 +1,5 @@
 import express from "express";
-import { actualizarProducto, agregarProducto, eliminarProducto, listarProducto, listarProductos } from "../controllers/controllerProductos";
+import { actualizarProducto, agregarProducto, eliminarProducto, listarProducto, listarProductos } from "../controllers/ProductoController";
 import accesoAdministrador from "../middlewares/middlewareAdministrador";
 import idLlamada from "../middlewares/middlewareUUID";
 const routerProductos = express.Router();

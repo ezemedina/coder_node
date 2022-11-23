@@ -1,5 +1,5 @@
 import express from "express";
-import { agregarProductoCarrito, borrarCarrito, crearCarrito, eliminarProductoCarrito, listarCarrito } from "../controllers/controllerCarrito";
+import { agregarProductoCarrito, borrarCarrito, crearCarrito, eliminarProductoCarrito, listarCarrito } from "../controllers/CarritoController";
 import idLlamada from "../middlewares/middlewareUUID";
 const routerCarrito = express.Router();
 

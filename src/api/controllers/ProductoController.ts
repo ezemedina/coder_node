@@ -1,7 +1,7 @@
 import moment from "moment";
 import fs from "fs";
 import productos from "../helpers/helpersProductos";
-import Producto from "../models/modelProducto";
+import Producto from "../models/Producto";
 import config from "../../config/config";
 
 const listarProductos = (req,res, next) => {

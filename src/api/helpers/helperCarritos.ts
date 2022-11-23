@@ -1,19 +1,15 @@
 import moment from "moment";
 import fs from "fs";
 import config from "../../config/config";
-let carritos:any[] = [];
+import Carrito from "../models/Carrito";
+let carritos:Array<Carrito> = [];
 
 try {
-    let carritosGuardados= fs.readFileSync(`${config.dataDir}/${config.carritosFile}`, "utf8");
-    carritos = JSON.parse(carritosGuardados);
-    console.log(`${moment().format()} helperCarritos.ts 9 INFO Se encontraron carritos guardados`);
+    carritos = require('../data/Carritos.json');
+    console.log(`${moment().format()} helperCarritos.ts 8 INFO Se encontraron carritos guardados ${carritos.length}`);
 } catch (error) {
-    console.log(`${moment().format()} helperCarritos.ts 11 ERROR No se encontro informacion de carritos`);
-    fs.mkdirSync(`${config.dataDir}`, {recursive: true});
-    console.log(`${moment().format()} helperCarritos.ts 13 INFO Generando directorio ${config.dataDir}`);
     fs.writeFileSync(`${config.dataDir}/${config.carritosFile}`, JSON.stringify(carritos));
-    console.log(`${moment().format()} helperCarritos.ts 15 INFO Guardando carritos`);
-
+    console.log(`${moment().format()} helperCarritos.ts 11 INFO Guardando carritos`);
 }
 
 export default carritos;

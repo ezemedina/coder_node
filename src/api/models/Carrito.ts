@@ -1,9 +1,10 @@
 import carritos from "../helpers/helperCarritos";
+import Producto from "./Producto";
 
 export default class Carrito {
     public id:number;
     public timestamp:number;
-    public productos:any[];
+    public productos:Array<Producto>;
 
 
     constructor () {

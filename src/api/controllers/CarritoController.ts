@@ -2,7 +2,7 @@ import moment from "moment";
 import fs from "fs";
 import carritos from "../helpers/helperCarritos";
 import productos from "../helpers/helpersProductos";
-import Carrito from "../models/modelCarrito";
+import Carrito from "../models/Carrito";
 import config from "../../config/config";
 
 const crearCarrito = (req, res) => {
