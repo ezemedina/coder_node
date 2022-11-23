@@ -97,7 +97,7 @@ const actualizarProducto = (req,res) => {
 
         res.status(202).send(productos[indice]);
         fs.writeFileSync(`${config.dataDir}/${config.ProductosFile}`, JSON.stringify(productos));
-        console.log(`${moment().format()} controllerProductos.ts 96 INFO id: ${req.uuid} Producto modificado ${productos[indice]}`);
+        console.log(`${moment().format()} controllerProductos.ts 96 INFO id: ${req.uuid} Producto modificado ${JSON.stringify(productos[indice])}`);
     } catch (error) {
         res.status(404).send(error);
         console.log(`${moment().format()} controllerProductos.ts 99 ERROR id: ${req.uuid} El producto con el ID: ${req.params.id} no existe`);
