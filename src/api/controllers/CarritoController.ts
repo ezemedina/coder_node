@@ -32,7 +32,7 @@ const borrarCarrito = (req, res) => {
 
         if (carritos[indice] === undefined){
             throw {
-                error: -3,
+                error: -4,
                 description: `El carrito con el ID: ${req.params.id} no existe`
             }
         } else {
@@ -57,7 +57,7 @@ const listarCarrito = (req,res) => {
 
         if (carritos[indice] === undefined){
             throw {
-                error: -3,
+                error: -4,
                 description: `El carrito con el ID: ${req.params.id} no existe`
             }
         } else {
@@ -77,7 +77,7 @@ const agregarProductoCarrito = (req, res) => {
         let indice = carritos.findIndex((elemento) => elemento.id === id);
         if (carritos[indice] === undefined){
             throw {
-                error: -3,
+                error: -4,
                 description: `El carrito con el ID: ${req.params.id} no existe`
             }
         } else {
@@ -117,14 +117,14 @@ const eliminarProductoCarrito = (req, res) => {
         let indice = carritos.findIndex((elemento) => elemento.id === id);
         if (carritos[indice] === undefined){
             throw {
-                error: -3,
+                error: -4,
                 description: `El carrito con el ID: ${req.params.id} no existe`
             }
         } else {
             let indiceProducto = carritos[indice].productos.findIndex((elemento) => elemento.id === id_prod);
             if ( carritos[indice].productos[indiceProducto] === undefined ) {
                 throw {
-                    error: -80,
+                    error: -8,
                     description: `el producto ${id_prod} no se encuantra en el carrito`
                 }
             } else {
@@ -137,7 +137,7 @@ const eliminarProductoCarrito = (req, res) => {
                     console.log(`${moment().format()} controllerCarrito.ts 131 INFO id: ${req.uuid} Producto ${id_prod} eliminado`);
                 } catch (error) {
                     res.status(500).send({
-                        error: -90,
+                        error: -9,
                         description: `Error al eliminar el producto`
                     });
                     console.log(`${moment().format()} controllerCarrito.ts 137 ERROR id: ${req.uuid} Error al eliminar el producto ${id_prod}`);

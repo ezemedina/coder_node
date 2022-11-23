@@ -6,7 +6,7 @@ const accesoAdministrador = (req,res,next) => {
         next();
     } else {
         res.status(403).send({
-            error: -4,
+            error: -1,
             description: `No se encuantra autorizado para realizar la petición`
         });
         console.log(`${moment().format()} middlewareAdministrador.ts 12 ERROR Id: ${req.uuid} No autorizado`);
