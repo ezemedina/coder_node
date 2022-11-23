@@ -1,6 +1,8 @@
 import moment from "moment";
+import fs from "fs";
 import productos from "../helpers/helpersProductos";
 import Producto from "../models/modelProducto";
+import config from "../../config/config";
 
 const listarProductos = (req,res, next) => {
     if ( req.params.id === undefined ) {
@@ -44,6 +46,7 @@ const agregarProducto = (req,res) => {
         let producto:Producto = new Producto (req.body.nombre, req.body.descripcion, req.body.codigo, req.body.imagen, req.body.precio, req.body.stock);
         if ( producto.guardarProducto() ){
             res.status(201).send(producto);
+            fs.writeFileSync(`${config.dataDir}/${config.ProductosFile}`, JSON.stringify(productos));
             console.log(`${moment().format()} controllerProductos.ts 47 INFO id: ${req.uuid} Producto generado ${JSON.stringify(producto)}`);
         } else {
             res.status(500).send({
@@ -93,6 +96,7 @@ const actualizarProducto = (req,res) => {
         }
 
         res.status(202).send(productos[indice]);
+        fs.writeFileSync(`${config.dataDir}/${config.ProductosFile}`, JSON.stringify(productos));
         console.log(`${moment().format()} controllerProductos.ts 96 INFO id: ${req.uuid} Producto modificado ${productos[indice]}`);
     } catch (error) {
         res.status(404).send(error);
@@ -117,7 +121,8 @@ const eliminarProducto = (req,res) => {
             res.status(200).send({
                 description: `Producto eliminado ID: ${req.params.id}`
             })
-        console.log(`${moment().format()} controllerProductos.ts 120 INFO id: ${req.uuid} Producto eliminado ID: ${req.params.id}`);
+            fs.writeFileSync(`${config.dataDir}/${config.ProductosFile}`, JSON.stringify(productos));
+            console.log(`${moment().format()} controllerProductos.ts 120 INFO id: ${req.uuid} Producto eliminado ID: ${req.params.id}`);
         }
     } catch (error) {
         res.status(404).send(error);
