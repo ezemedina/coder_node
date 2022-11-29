@@ -1,5 +1,6 @@
 import express from "express";
 import moment from "moment";
+import cors from "cors";
 import routerProductos from "./api/routes/routerProductos";
 import routerCarrito from "./api/routes/routerCarrito";
 import config from "./config/config";
@@ -8,6 +9,9 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors({
+    origin: config.CorsOrigin
+}));
 app.use('/api/productos', routerProductos);
 app.use('/api/carrito', routerCarrito);
 app.use('*', (req,res) => {
