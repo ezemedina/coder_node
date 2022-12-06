@@ -1,0 +1,33 @@
+<div class="container">
+    <p class="h1 my-3">Chat</p>
+    <div class="row">
+        <div class="col">
+            <form id="formChat">
+                <div class="input-group mb-3">
+                    <input type="email" class="form-control" placeholder="Email"
+                        aria-label="Email" aria-describedby="basic-addon1" id="mailSender" required>
+                </div>
+                <div class="form-floating my-3">
+                    <textarea class="form-control" placeholder="Mensaje" id="floatingTextarea2"
+                        style="height: 300px; resize: none;" maxlength="255" required></textarea>
+                    <label for="floatingTextarea2">Mensaje</label>
+                </div>
+                <button id="botonEnviarChat" type="submit" class="btn btn-primary">Enviar</button>
+                <button id="botonEnviandoChat" class="btn btn-primary visually-hidden" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Enviando...
+                </button>
+                <div class="float-end">
+                    <span class="badge text-bg-primary" id="charCounter">0/255</span>
+                </div>
+            </form>
+        </div>
+        <div class="col">
+            <div id="alertaChat" class="alert alert-warning" role="alert">
+                No Hay Mensajes.
+            </div>
+            <div id="mensajes" style="height: 410px;max-height: 410px; overflow: auto;">
+            </div>
+        </div>    
+    </div>
+</div>
