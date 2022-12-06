@@ -35,7 +35,6 @@
             };
 
             try {
-                console.info(`Emitiendo mensaje al canal nuevoProducto ${JSON.stringify(data)}`);
                 socket.emit("nuevoProducto", JSON.stringify(data));
                 e.target.children[1].children[1].value = "";
                 e.target.children[2].children[1].value = "";
@@ -61,7 +60,6 @@
                 alerta.classList.remove('visually-hidden');
                 tabla.classList.add('visually-hidden');
                 informacion.innerHTML = "";
-                console.info(`Sin productos`);
             } else {
                 alerta.classList.add('visually-hidden');
                 tabla.classList.remove('visually-hidden');
@@ -82,7 +80,6 @@
                 </tr>`;
                 informacion.innerHTML += append;
                 });
-                console.info(`Recepcion de productos imprimidos`);
             }
         });
 
@@ -101,6 +98,12 @@
             }
         }
 
+        formChat.onkeyup = function(e){
+            let chars = document.getElementById('floatingTextarea2').value.length
+            let counter = document.getElementById('charCounter')
+            counter.innerHTML = `${chars}/255`
+        }
+
         formChat.addEventListener("submit", (e) => {
             e.preventDefault();
             let autor = e.target.children[0].children[0].value;
@@ -115,7 +118,6 @@
             };
 
             try {
-                console.info(`Emitiendo mensaje al canal nuevoMensaje ${JSON.stringify(data)}`);
                 socket.emit("nuevoMensaje", JSON.stringify(data));
                 e.target.children[1].children[0].value = "";
             } catch (error) {
@@ -153,7 +155,13 @@
                     mensajes.innerHTML += append;
                 });
                 mensajes.scrollTop = mensajes.scrollHeight;
-                console.info(`Recepcion de mensajes imprimidos`);
+                let indexMensajes = mensajesRecibidos.length - 1 
+                let mailSender = document.getElementById('mailSender').value;
+                if ( mensajesRecibidos[indexMensajes].author != mailSender) {
+                    let notificacion = new Audio('https://tonos123.com/wp-content/uploads/2022/10/Huawei-P60-Pro-Notification.mp3');
+                    notificacion.play()
+                    .catch(() => {});
+                }
             }
         });
     });

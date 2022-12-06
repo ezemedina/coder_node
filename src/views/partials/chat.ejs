@@ -5,11 +5,11 @@
             <form id="formChat">
                 <div class="input-group mb-3">
                     <input type="email" class="form-control" placeholder="Email"
-                        aria-label="Email" aria-describedby="basic-addon1" required>
+                        aria-label="Email" aria-describedby="basic-addon1" id="mailSender" required>
                 </div>
                 <div class="form-floating my-3">
                     <textarea class="form-control" placeholder="Mensaje" id="floatingTextarea2"
-                        style="height: 300px; resize: none;" required></textarea>
+                        style="height: 300px; resize: none;" maxlength="255" required></textarea>
                     <label for="floatingTextarea2">Mensaje</label>
                 </div>
                 <button id="botonEnviarChat" type="submit" class="btn btn-primary">Enviar</button>
@@ -17,6 +17,9 @@
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     Enviando...
                 </button>
+                <div class="float-end">
+                    <span class="badge text-bg-primary" id="charCounter">0/255</span>
+                </div>
             </form>
         </div>
         <div class="col">
