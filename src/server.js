@@ -12,8 +12,16 @@ const app = express();
 const httpServer = new HttpServer(app);
 const io = new SocketServer(httpServer);
 
-crearTablaProductos();
-crearTablaMensajes();
+crearTablaProductos()
+.then(() => console.log('INFO Tabla productos creada.'))
+.catch(() => {
+  console.log('INFO Tabla productos existente omitiendo creacion')
+});
+crearTablaMensajes()
+.then(() => console.log('INFO Tabla mensajes creada.'))
+.catch(() => {
+  console.log('INFO Tabla mensajes existente omitiendo creacion')
+});
 
 app.set('view engine', 'ejs');
 

@@ -2,21 +2,18 @@ const config = require('../config');
 
 const crearTablaProductos = async () => {
     const knex = require('knex')(config.mysql);
-    await knex.schema.dropTableIfExists('productos')
-    .then( () => {
-        knex.schema.createTable('productos', function (table) {
-            table.increments('id').primary();
-            table.text('title', 255).notNullable();
-            table.text('price', 255).notNullable();
-            table.text('thumbnail', 255).notNullable();
-            table.charset('utf8mb4');
-            table.collate('utf8mb4_bin');
-        })
-        .catch((err) => {console.log(err); throw err})
-        .finally(() => {
-            knex.destroy();
-        });
+    await knex.schema.createTable('productos', function (table) {
+        table.increments('id').primary();
+        table.text('title', 255).notNullable();
+        table.text('price', 255).notNullable();
+        table.text('thumbnail', 255).notNullable();
+        table.charset('utf8mb4');
+        table.collate('utf8mb4_bin');
     })
+    .catch((err) => {throw err})
+    .finally(() => {
+        knex.destroy();
+    });
 }
 
 const obtenerProductosDb = async () => {
