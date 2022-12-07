@@ -104,4 +104,4 @@ dist
 .tern-port
 
 # no follow sqlite
-*.sqlite
+./src/database/*.sqlite
