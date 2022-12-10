@@ -1,14 +1,14 @@
 module.exports = class MensajesServices {
-    config = require('../config');
-    gestorBaseDeDatos = require("../container/baseDeDatos.container"); 
-    DB = new this.gestorBaseDeDatos(this.config.sqlite3);
+    #config = require('../config');
+    #gestorBaseDeDatos = require("../container/baseDeDatos.container"); 
+    #DB = new this.#gestorBaseDeDatos(this.#config.sqlite3);
 
     crearDB() {
-        this.DB.crearTablaMensjes();
+        this.#DB.crearTablaMensjes();
     }
 
     agregarMensajeWS(io,mensaje) {
-        this.DB.agregarElemento(mensaje,'mensajes')
+        this.#DB.agregarElemento(mensaje,'mensajes')
         .then(() => {
             this.emitirMensajeWS(io);
         })
@@ -18,7 +18,7 @@ module.exports = class MensajesServices {
     }
 
     emitirMensajeWS(io) {
-        this.DB.obtenerElementos('mensajes')
+        this.#DB.obtenerElementos('mensajes')
         .then((data) =>{
             io.sockets.emit('mensajes', JSON.stringify(data));
         })
@@ -28,7 +28,7 @@ module.exports = class MensajesServices {
     }
 
     obtenerMensajesWS(connection) {
-        this.DB.obtenerElementos('mensajes')
+        this.#DB.obtenerElementos('mensajes')
         .then((data) =>{
             connection.emit('mensajes', JSON.stringify(data));
         })

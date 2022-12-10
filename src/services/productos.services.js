@@ -1,14 +1,14 @@
 module.exports = class ProductosServices {
-    config = require('../config');
-    gestorBaseDeDatos = require("../container/baseDeDatos.container"); 
-    DB = new this.gestorBaseDeDatos(this.config.mysql);
+    #config = require('../config');
+    #gestorBaseDeDatos = require("../container/baseDeDatos.container"); 
+    #DB = new this.#gestorBaseDeDatos(this.#config.mysql);
 
     crearDB() {
-        this.DB.crearTablaProdcutos();
+        this.#DB.crearTablaProdcutos();
     }
 
     agregarProductoWS(io,producto) {
-        this.DB.agregarElemento(producto,'productos')
+        this.#DB.agregarElemento(producto,'productos')
         .then(() => {
             this.emitirProductosWS(io);
         })
@@ -18,7 +18,7 @@ module.exports = class ProductosServices {
     }
 
     emitirProductosWS(io) {
-        this.DB.obtenerElementos('productos')
+        this.#DB.obtenerElementos('productos')
         .then((data) =>{
             io.sockets.emit('productos', data);
         })
@@ -28,7 +28,7 @@ module.exports = class ProductosServices {
     }
 
     obtenerProductosWS(connection) {
-        this.DB.obtenerElementos('productos')
+        this.#DB.obtenerElementos('productos')
         .then((data) =>{
             connection.emit('productos', data);
         })
@@ -38,7 +38,7 @@ module.exports = class ProductosServices {
     }
 
     agregarProducto(req,res,producto) {
-        this.DB.agregarElemento(producto,'productos')
+        this.#DB.agregarElemento(producto,'productos')
         .then((data) => {
             res.status(201).send(data);
         })
@@ -51,7 +51,7 @@ module.exports = class ProductosServices {
 
     obtenerProductos(req,res) {
         try {
-            this.DB.obtenerElementos('productos')
+            this.#DB.obtenerElementos('productos')
             .then((data) =>{
                 res.status(200).send(data);
             })
@@ -63,9 +63,21 @@ module.exports = class ProductosServices {
         }
     }
 
+    obtenerProductosEJS(req,res) {
+        this.#DB.obtenerElementos('productos')
+        .then((data) =>{
+            res.status(200).render('pages/productos', {
+                productos: data
+            });
+        })
+        .catch((err) => {
+            res.status(404).send(err.message);
+        });   
+    }
+
     obtenerProductosId(req,res,idProductos) {
         try {
-            this.DB.obtenerElementoPorId(idProductos,'productos')
+            this.#DB.obtenerElementoPorId(idProductos,'productos')
             .then((data) =>{
                 res.status(200).send(data);
             })
@@ -80,9 +92,9 @@ module.exports = class ProductosServices {
 
     actualizarProductoId(req,res,idProductos) {
         try {
-            this.DB.actualizarElementoPorId(idProductos,req.body,'productos')
+            this.#DB.actualizarElementoPorId(idProductos,req.body,'productos')
             .then((data) =>{
-                this.DB.obtenerElementoPorId(idProductos,'productos')
+                this.#DB.obtenerElementoPorId(idProductos,'productos')
                 .then((data) =>{
                     res.status(200).send(data);
                 });
@@ -98,7 +110,7 @@ module.exports = class ProductosServices {
 
     borrarProductoId(req,res,idProductos) {
         try {
-            this.DB.borrarElementoPorId(idProductos,'productos')
+            this.#DB.borrarElementoPorId(idProductos,'productos')
             .then((data) =>{
                 res.status(200).send(data);
             })
