@@ -1,5 +1,5 @@
 const express = require('express');
-const { obtenerProductos, cargarProducto, obtenerProductoId, actualizarProductoId, borrarProductoId } = require('../controller/controllerProducto');
+const { obtenerProductos, cargarProducto, obtenerProductoId, actualizarProductoId, borrarProductoId } = require('../controller/producto.controller');
 const productos = express.Router();
 
 productos.get("/",obtenerProductos);
